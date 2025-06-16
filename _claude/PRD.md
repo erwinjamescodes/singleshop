@@ -201,21 +201,21 @@ src/
 
 ### Week 1: Setup & Landing Page
 
-- [ ] Next.js 14 project setup with TypeScript
-- [ ] Supabase project setup and database schema
-- [ ] Landing page design and development
-- [ ] Marketing site pages (pricing, features, examples)
-- [ ] Responsive design and mobile optimization
-- [ ] SEO optimization and meta tags
+- [x] Next.js 14 project setup with TypeScript
+- [x] Supabase project setup and database schema
+- [x] Landing page design and development
+- [x] Marketing site pages (pricing, features, examples)
+- [x] Responsive design and mobile optimization
+- [x] SEO optimization and meta tags
 
 ### Week 2: Auth & Shop Creation
 
-- [ ] Supabase Auth integration (email/password)
-- [ ] Basic UI components with Tailwind
-- [ ] User profile creation flow
-- [ ] Username validation and reservation
-- [ ] Shop creation form and validation
-- [ ] Product creation form with image upload
+- [x] Supabase Auth integration (email/password)
+- [x] Basic UI components with Tailwind
+- [x] User profile creation flow
+- [x] Username validation and reservation
+- [x] Shop creation form and validation
+- [x] Product creation form with image upload
 
 **Deliverable:** Landing page, authentication system, and basic shop creation flow
 

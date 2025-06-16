@@ -1,9 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Plus, Eye, DollarSign, ShoppingBag } from "lucide-react";
+import { ExternalLink, Plus, Eye, DollarSign, ShoppingBag, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 interface DashboardContentProps {
@@ -14,6 +15,32 @@ interface DashboardContentProps {
 
 export function DashboardContent({ profile, shop, product }: DashboardContentProps) {
   const shopUrl = `https://singleshop.com/${profile.username}`;
+  const [analytics, setAnalytics] = useState({
+    views: 0,
+    revenue: 0,
+    conversion_rate: 0,
+    recent_events: [],
+    daily_stats: [],
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch('/api/analytics/dashboard?days=30');
+        if (response.ok) {
+          const data = await response.json();
+          setAnalytics(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch analytics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -54,35 +81,41 @@ export function DashboardContent({ profile, shop, product }: DashboardContentPro
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : analytics.views.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
-              +0% from last month
+              Last 30 days
             </p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$0</div>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : `$${(analytics.revenue / 100).toFixed(2)}`}
+            </div>
             <p className="text-xs text-muted-foreground">
-              +0% from last month
+              Last 30 days
             </p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Orders</CardTitle>
-            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : `${analytics.conversion_rate.toFixed(1)}%`}
+            </div>
             <p className="text-xs text-muted-foreground">
-              +0% from last month
+              Views to purchases
             </p>
           </CardContent>
         </Card>

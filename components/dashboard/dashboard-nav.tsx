@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { LogoutButton } from "@/components/logout-button";
-import { User, ShoppingBag, BarChart3, Settings } from "lucide-react";
+import { User, ShoppingBag, BarChart3, Settings, Package } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface DashboardNavProps {
@@ -33,6 +33,13 @@ export function DashboardNav({ user }: DashboardNavProps) {
               >
                 <ShoppingBag className="h-4 w-4" />
                 <span>Product</span>
+              </Link>
+              <Link 
+                href="/dashboard/orders" 
+                className="flex items-center space-x-2 text-gray-600 hover:text-singleshop-blue transition-colors"
+              >
+                <Package className="h-4 w-4" />
+                <span>Orders</span>
               </Link>
               <Link 
                 href="/dashboard/settings" 

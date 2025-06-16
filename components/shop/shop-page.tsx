@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Heart, Share2, ArrowLeft } from "lucide-react";
@@ -15,6 +15,42 @@ export function ShopPage({ shop }: ShopPageProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const product = shop.products?.[0];
   const profile = shop.profiles;
+
+  // Track analytics
+  useEffect(() => {
+    const trackPageView = async () => {
+      try {
+        // Get or create visitor ID
+        let visitorId = localStorage.getItem('singleshop_visitor_id');
+        if (!visitorId) {
+          visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          localStorage.setItem('singleshop_visitor_id', visitorId);
+        }
+
+        await fetch('/api/analytics/track', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            shop_id: shop.id,
+            event_type: 'shop_view',
+            visitor_id: visitorId,
+            metadata: {
+              page: 'shop',
+              product_id: product?.id,
+              referrer: document.referrer || null,
+              user_agent: navigator.userAgent,
+            },
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to track page view:', error);
+      }
+    };
+
+    trackPageView();
+  }, [shop.id, product?.id]);
 
   if (!product) {
     return (
