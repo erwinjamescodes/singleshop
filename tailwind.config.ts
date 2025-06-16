@@ -51,11 +51,52 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        // SingleShop Design System Colors
+        'singleshop-blue': '#1E40AF',
+        'singleshop-red': '#EF4444',
+        'singleshop-green': '#10B981',
+        'singleshop-light-blue': '#E0F2FE',
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      maxWidth: {
+        'singleshop': '1280px',
+      },
+      spacing: {
+        'section': '80px',
+        'card': '24px',
+        'card-lg': '32px',
+      },
+      fontSize: {
+        'hero': ['56px', { lineHeight: '1.1', fontWeight: '800' }],
+        'section': ['40px', { lineHeight: '1.2', fontWeight: '700' }],
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.5s ease-out',
+        'slide-up': 'slideUp 0.5s ease-out',
+        'scale-in': 'scaleIn 0.3s ease-out',
+        'lift': 'lift 0.2s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        lift: {
+          '0%': { transform: 'translateY(0px)' },
+          '100%': { transform: 'translateY(-2px)' },
+        },
       },
     },
   },

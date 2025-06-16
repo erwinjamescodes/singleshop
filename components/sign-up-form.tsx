@@ -58,59 +58,79 @@ export function SignUpForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+      <Card className="border-0 shadow-xl bg-white rounded-2xl">
+        <CardHeader className="text-center pb-8">
+          <CardTitle className="text-3xl font-bold text-gray-900">Create Your Shop</CardTitle>
+          <CardDescription className="text-lg text-gray-600">
+            Join thousands of creators selling with SingleShop
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-8 pb-8">
           <form onSubmit={handleSignUp}>
             <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+              <div className="grid gap-3">
+                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                  Email Address
+                </Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="your@email.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 px-4 border-2 border-gray-200 rounded-lg focus:border-singleshop-blue focus:ring-2 focus:ring-singleshop-blue/20 focus:ring-offset-0"
                 />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
+              <div className="grid gap-3">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  Password
+                </Label>
                 <Input
                   id="password"
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="h-12 px-4 border-2 border-gray-200 rounded-lg focus:border-singleshop-blue focus:ring-2 focus:ring-singleshop-blue/20 focus:ring-offset-0"
                 />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="repeat-password">Repeat Password</Label>
-                </div>
+              <div className="grid gap-3">
+                <Label htmlFor="repeat-password" className="text-sm font-medium text-gray-700">
+                  Confirm Password
+                </Label>
                 <Input
                   id="repeat-password"
                   type="password"
                   required
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
+                  className="h-12 px-4 border-2 border-gray-200 rounded-lg focus:border-singleshop-blue focus:ring-2 focus:ring-singleshop-blue/20 focus:ring-offset-0"
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-600">{error}</p>
+                </div>
+              )}
+              <Button 
+                type="submit" 
+                className="w-full h-12 bg-gradient-to-r from-singleshop-blue to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:animate-lift" 
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating Your Shop..." : "Start Selling Now"}
               </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
-                Login
-              </Link>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Already have an account?{" "}
+                <Link 
+                  href="/auth/login" 
+                  className="font-medium text-singleshop-blue hover:text-blue-700 transition-colors"
+                >
+                  Sign In
+                </Link>
+              </p>
             </div>
           </form>
         </CardContent>
