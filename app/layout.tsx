@@ -10,7 +10,8 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "SingleShop - Your product, your link, your success",
-  description: "Enable anyone to sell their single product online with a custom URL in under 60 seconds",
+  description:
+    "Enable anyone to sell their single product online with a custom URL in under 60 seconds",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -35,7 +36,7 @@ export default function RootLayout({
       <body className={`${geistSans.className} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
