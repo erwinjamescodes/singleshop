@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { 
-  Share2, 
-  Twitter, 
-  Facebook, 
-  Instagram, 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Share2,
+  Twitter,
+  Facebook,
+  Instagram,
   Copy,
   Check,
-  MessageCircle
-} from 'lucide-react';
+  MessageCircle,
+} from "lucide-react";
 
 interface SocialSharingProps {
   productName: string;
@@ -20,20 +20,23 @@ interface SocialSharingProps {
   productImage?: string;
 }
 
-export default function SocialSharing({ 
-  productName, 
-  productDescription, 
-  productPrice, 
-  shopUrl, 
-  productImage 
+export default function SocialSharing({
+  productName,
+  productDescription,
+  productPrice,
+  shopUrl,
+  productImage,
 }: SocialSharingProps) {
   const [copied, setCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const shareUrl = `https://singleshop.com${shopUrl}`;
   const price = (productPrice / 100).toFixed(2);
-  
-  const shareText = `Check out ${productName} for $${price}! ${productDescription.slice(0, 100)}${productDescription.length > 100 ? '...' : ''}`;
+
+  const shareText = `Check out ${productName} for $${price}! ${productDescription.slice(
+    0,
+    100
+  )}${productDescription.length > 100 ? "..." : ""}`;
 
   const copyToClipboard = async () => {
     try {
@@ -41,23 +44,29 @@ export default function SocialSharing({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   };
 
   const shareToTwitter = () => {
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-    window.open(url, '_blank', 'width=600,height=400');
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      shareText
+    )}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, "_blank", "width=600,height=400");
   };
 
   const shareToFacebook = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
-    window.open(url, '_blank', 'width=600,height=400');
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      shareUrl
+    )}`;
+    window.open(url, "_blank", "width=600,height=400");
   };
 
   const shareToWhatsApp = () => {
-    const url = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
-    window.open(url, '_blank');
+    const url = `https://wa.me/?text=${encodeURIComponent(
+      shareText + " " + shareUrl
+    )}`;
+    window.open(url, "_blank");
   };
 
   const handleNativeShare = async () => {
@@ -68,8 +77,11 @@ export default function SocialSharing({
           text: shareText,
           url: shareUrl,
         });
-      } catch (err) {
-        console.error('Error sharing:', err);
+      } catch (err: any) {
+        // Don't log error if user simply canceled the share dialog
+        if (err.name !== "AbortError" && !err.message.includes("canceled")) {
+          console.error("Error sharing:", err);
+        }
       }
     } else {
       setIsOpen(!isOpen);
@@ -78,7 +90,7 @@ export default function SocialSharing({
 
   return (
     <div className="relative">
-      <Button 
+      <Button
         onClick={handleNativeShare}
         variant="outline"
         size="sm"
@@ -92,7 +104,7 @@ export default function SocialSharing({
         <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
           <div className="p-4">
             <h4 className="font-medium mb-3">Share this product</h4>
-            
+
             <div className="space-y-2">
               <Button
                 onClick={shareToTwitter}
@@ -103,7 +115,7 @@ export default function SocialSharing({
                 <Twitter className="h-4 w-4 mr-2 text-blue-400" />
                 Share on Twitter
               </Button>
-              
+
               <Button
                 onClick={shareToFacebook}
                 variant="outline"
@@ -113,7 +125,7 @@ export default function SocialSharing({
                 <Facebook className="h-4 w-4 mr-2 text-blue-600" />
                 Share on Facebook
               </Button>
-              
+
               <Button
                 onClick={shareToWhatsApp}
                 variant="outline"
@@ -123,7 +135,7 @@ export default function SocialSharing({
                 <MessageCircle className="h-4 w-4 mr-2 text-green-600" />
                 Share on WhatsApp
               </Button>
-              
+
               <div className="border-t pt-2">
                 <div className="flex items-center space-x-2">
                   <input
@@ -151,7 +163,7 @@ export default function SocialSharing({
               </div>
             </div>
           </div>
-          
+
           <div className="px-4 py-2 bg-gray-50 rounded-b-lg">
             <button
               onClick={() => setIsOpen(false)}
@@ -162,13 +174,10 @@ export default function SocialSharing({
           </div>
         </div>
       )}
-      
+
       {/* Backdrop */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
     </div>
   );

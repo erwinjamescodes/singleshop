@@ -58,9 +58,11 @@ export function SignUpForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="border-0 shadow-xl bg-white rounded-2xl">
+      <Card className="border-0 shadow-xl bg-white rounded-none">
         <CardHeader className="text-center pb-8">
-          <CardTitle className="text-3xl font-bold text-gray-900">Create Your Shop</CardTitle>
+          <CardTitle className="text-3xl font-bold text-gray-900">
+            Create Your Shop
+          </CardTitle>
           <CardDescription className="text-lg text-gray-600">
             Join thousands of creators selling with SingleShop
           </CardDescription>
@@ -69,7 +71,10 @@ export function SignUpForm({
           <form onSubmit={handleSignUp}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </Label>
                 <Input
@@ -83,7 +88,10 @@ export function SignUpForm({
                 />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password
                 </Label>
                 <Input
@@ -96,7 +104,10 @@ export function SignUpForm({
                 />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="repeat-password" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="repeat-password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Confirm Password
                 </Label>
                 <Input
@@ -113,9 +124,9 @@ export function SignUpForm({
                   <p className="text-sm text-red-600">{error}</p>
                 </div>
               )}
-              <Button 
-                type="submit" 
-                className="w-full h-12 bg-gradient-to-r from-singleshop-blue to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:animate-lift" 
+              <Button
+                type="submit"
+                className="w-full h-12 bg-gradient-to-r from-singleshop-blue to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:animate-lift"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating Your Shop..." : "Start Selling Now"}
@@ -124,8 +135,8 @@ export function SignUpForm({
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link 
-                  href="/auth/login" 
+                <Link
+                  href="/auth/login"
                   className="font-medium text-singleshop-blue hover:text-blue-700 transition-colors"
                 >
                   Sign In
