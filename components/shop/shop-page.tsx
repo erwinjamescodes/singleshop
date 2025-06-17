@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Heart, Share2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { BuyButton } from "./buy-button";
+import SocialSharing from "./social-sharing";
 
 interface ShopPageProps {
   shop: any;
@@ -146,9 +147,13 @@ export function ShopPage({ shop }: ShopPageProps) {
                 <Badge variant={product.is_available ? "default" : "secondary"}>
                   {product.is_available ? "Available" : "Sold Out"}
                 </Badge>
-                <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                  <Heart className="h-5 w-5" />
-                </button>
+                <SocialSharing
+                  productName={product.name}
+                  productDescription={product.description || ''}
+                  productPrice={product.price_cents}
+                  shopUrl={`/${shop.slug}`}
+                  productImage={product.image_urls?.[0]}
+                />
               </div>
               
               <h1 className="text-3xl font-bold text-gray-900 mb-2">

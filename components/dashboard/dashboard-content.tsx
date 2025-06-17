@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Plus, Eye, DollarSign, ShoppingBag, TrendingUp } from "lucide-react";
+import { ExternalLink, Plus, Eye, DollarSign, ShoppingBag, TrendingUp, Package, Users } from "lucide-react";
 import Link from "next/link";
+import AnalyticsChart from "./analytics-chart";
+import RevenueTracking from "./revenue-tracking";
 
 interface DashboardContentProps {
   profile: any;
@@ -121,6 +123,30 @@ export function DashboardContent({ profile, shop, product }: DashboardContentPro
         </Card>
       </div>
 
+      {/* Analytics Charts */}
+      {!loading && analytics.daily_stats.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Analytics Overview</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <AnalyticsChart
+              dailyStats={analytics.daily_stats}
+              title="Page Views"
+              metric="views"
+            />
+            <AnalyticsChart
+              dailyStats={analytics.daily_stats}
+              title="Orders"
+              metric="orders"
+            />
+            <AnalyticsChart
+              dailyStats={analytics.daily_stats}
+              title="Revenue"
+              metric="revenue"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Product Status */}
       <Card>
         <CardHeader>
@@ -219,6 +245,13 @@ export function DashboardContent({ profile, shop, product }: DashboardContentPro
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Revenue Tracking */}
+      {analytics.revenue > 0 && (
+        <div className="mt-8">
+          <RevenueTracking analytics={analytics} />
+        </div>
       )}
     </div>
   );

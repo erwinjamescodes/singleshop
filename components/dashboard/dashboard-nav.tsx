@@ -28,7 +28,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
                 <span>Dashboard</span>
               </Link>
               <Link 
-                href="/dashboard/product" 
+                href="/dashboard/product/manage" 
                 className="flex items-center space-x-2 text-gray-600 hover:text-singleshop-blue transition-colors"
               >
                 <ShoppingBag className="h-4 w-4" />
