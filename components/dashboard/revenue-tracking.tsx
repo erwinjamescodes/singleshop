@@ -23,8 +23,8 @@ export default function RevenueTracking({ analytics }: RevenueTrackingProps) {
   const [payoutStatus, setPayoutStatus] = useState({
     available_balance: 0,
     pending_balance: 0,
-    last_payout: null,
-    next_payout: null,
+    last_payout: null as Date | null,
+    next_payout: null as Date | null,
   });
 
   useEffect(() => {

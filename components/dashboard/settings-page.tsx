@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { 
-  User, 
-  Store, 
-  CreditCard, 
-  Bell, 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  User,
+  Store,
+  CreditCard,
+  Bell,
   Shield,
   Camera,
   Save,
   ExternalLink,
   Check,
-  AlertCircle
-} from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+  AlertCircle,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 interface SettingsPageProps {
   user: any;
@@ -26,28 +26,35 @@ interface SettingsPageProps {
   shop: any;
 }
 
-export default function SettingsPage({ user, profile, shop }: SettingsPageProps) {
+export default function SettingsPage({
+  user,
+  profile,
+  shop,
+}: SettingsPageProps) {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [activeTab, setActiveTab] = useState('profile');
-  
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+  const [activeTab, setActiveTab] = useState("profile");
+
   // Profile form state
   const [profileForm, setProfileForm] = useState({
-    display_name: profile?.display_name || '',
-    bio: profile?.bio || '',
-    username: profile?.username || '',
+    display_name: profile?.display_name || "",
+    bio: profile?.bio || "",
+    username: profile?.username || "",
   });
 
   // Shop form state
   const [shopForm, setShopForm] = useState({
-    title: shop?.title || '',
-    description: shop?.description || '',
+    title: shop?.title || "",
+    description: shop?.description || "",
     social_links: {
-      website: '',
-      instagram: '',
-      twitter: '',
-      facebook: '',
-      youtube: '',
+      website: "",
+      instagram: "",
+      twitter: "",
+      facebook: "",
+      youtube: "",
     },
   });
 
@@ -60,19 +67,22 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
 
     try {
       const { error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({
           display_name: profileForm.display_name,
           bio: profileForm.bio,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id);
+        .eq("id", user.id);
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: 'Profile updated successfully!' });
+      setMessage({ type: "success", text: "Profile updated successfully!" });
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to update profile' });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to update profile",
+      });
     } finally {
       setLoading(false);
     }
@@ -85,19 +95,25 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
 
     try {
       const { error } = await supabase
-        .from('shops')
+        .from("shops")
         .update({
           title: shopForm.title,
           description: shopForm.description,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', user.id);
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: 'Shop settings updated successfully!' });
+      setMessage({
+        type: "success",
+        text: "Shop settings updated successfully!",
+      });
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to update shop settings' });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to update shop settings",
+      });
     } finally {
       setLoading(false);
     }
@@ -110,34 +126,37 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
     setLoading(true);
     try {
       // Upload to Supabase Storage
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${user.id}/avatar.${fileExt}`;
-      
+
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('avatars')
+        .from("avatars")
         .upload(fileName, file, { upsert: true });
 
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("avatars").getPublicUrl(fileName);
 
       // Update profile with avatar URL
       const { error: updateError } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({ avatar_url: publicUrl })
-        .eq('id', user.id);
+        .eq("id", user.id);
 
       if (updateError) throw updateError;
 
-      setMessage({ type: 'success', text: 'Avatar updated successfully!' });
-      
+      setMessage({ type: "success", text: "Avatar updated successfully!" });
+
       // Reload the page to show new avatar
       window.location.reload();
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to upload avatar' });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to upload avatar",
+      });
     } finally {
       setLoading(false);
     }
@@ -146,49 +165,59 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
   const createPaymentAccount = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/accounts/create', {
-        method: 'POST',
+      const response = await fetch("/api/accounts/create", {
+        method: "POST",
       });
 
       const data = await response.json();
 
       if (response.ok) {
         // Redirect to onboarding
-        window.open(data.onboarding_link, '_blank');
-        setMessage({ type: 'success', text: 'Payment account setup started! Complete the process in the new tab.' });
+        window.open(data.onboarding_link, "_blank");
+        setMessage({
+          type: "success",
+          text: "Payment account setup started! Complete the process in the new tab.",
+        });
       } else {
         throw new Error(data.error);
       }
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Failed to create payment account' });
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to create payment account",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const tabs = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'shop', label: 'Shop', icon: Store },
-    { id: 'payments', label: 'Payments', icon: CreditCard },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'security', label: 'Security', icon: Shield },
+    { id: "profile", label: "Profile", icon: User },
+    { id: "shop", label: "Shop", icon: Store },
+    { id: "payments", label: "Payments", icon: CreditCard },
+    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "security", label: "Security", icon: Shield },
   ];
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground">Manage your account and shop preferences</p>
+        <p className="text-muted-foreground">
+          Manage your account and shop preferences
+        </p>
       </div>
 
       {/* Message Display */}
       {message && (
-        <div className={`p-4 rounded-lg flex items-center space-x-2 ${
-          message.type === 'success' 
-            ? 'bg-green-50 text-green-800 border border-green-200' 
-            : 'bg-red-50 text-red-800 border border-red-200'
-        }`}>
-          {message.type === 'success' ? (
+        <div
+          className={`p-4 rounded-lg flex items-center space-x-2 ${
+            message.type === "success"
+              ? "bg-green-50 text-green-800 border border-green-200"
+              : "bg-red-50 text-red-800 border border-red-200"
+          }`}
+        >
+          {message.type === "success" ? (
             <Check className="h-4 w-4" />
           ) : (
             <AlertCircle className="h-4 w-4" />
@@ -208,8 +237,8 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
-                    ? 'border-singleshop-blue text-singleshop-blue'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? "border-singleshop-blue text-singleshop-blue"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -223,7 +252,7 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
       {/* Tab Content */}
       <div className="grid gap-6">
         {/* Profile Tab */}
-        {activeTab === 'profile' && (
+        {activeTab === "profile" && (
           <div className="grid gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
@@ -236,7 +265,12 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                     <Input
                       id="display_name"
                       value={profileForm.display_name}
-                      onChange={(e) => setProfileForm({ ...profileForm, display_name: e.target.value })}
+                      onChange={(e) =>
+                        setProfileForm({
+                          ...profileForm,
+                          display_name: e.target.value,
+                        })
+                      }
                       placeholder="Your display name"
                     />
                   </div>
@@ -264,7 +298,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                     <textarea
                       id="bio"
                       value={profileForm.bio}
-                      onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                      onChange={(e) =>
+                        setProfileForm({ ...profileForm, bio: e.target.value })
+                      }
                       placeholder="Tell people about yourself..."
                       className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       maxLength={500}
@@ -276,11 +312,7 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
 
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      value={user.email}
-                      disabled
-                    />
+                    <Input id="email" value={user.email} disabled />
                     <p className="text-sm text-muted-foreground mt-1">
                       Email cannot be changed from this page
                     </p>
@@ -322,7 +354,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   </div>
                   <div>
                     <p className="text-sm font-medium">Upload new picture</p>
-                    <p className="text-sm text-muted-foreground">JPG, PNG or GIF. Max 2MB.</p>
+                    <p className="text-sm text-muted-foreground">
+                      JPG, PNG or GIF. Max 2MB.
+                    </p>
                   </div>
                 </div>
 
@@ -334,14 +368,15 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                     onChange={handleAvatarUpload}
                     className="hidden"
                   />
-                  <label htmlFor="avatar">
-                    <Button type="button" variant="outline" className="cursor-pointer" asChild>
-                      <span>
-                        <Camera className="h-4 w-4 mr-2" />
-                        Choose Image
-                      </span>
-                    </Button>
-                  </label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() => document.getElementById("avatar")?.click()}
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    Choose Image
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -349,7 +384,7 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
         )}
 
         {/* Shop Tab */}
-        {activeTab === 'shop' && (
+        {activeTab === "shop" && (
           <div className="max-w-2xl">
             <Card>
               <CardHeader>
@@ -362,7 +397,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                     <Input
                       id="shop_title"
                       value={shopForm.title}
-                      onChange={(e) => setShopForm({ ...shopForm, title: e.target.value })}
+                      onChange={(e) =>
+                        setShopForm({ ...shopForm, title: e.target.value })
+                      }
                       placeholder="Your shop name"
                       required
                     />
@@ -373,7 +410,12 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                     <textarea
                       id="shop_description"
                       value={shopForm.description}
-                      onChange={(e) => setShopForm({ ...shopForm, description: e.target.value })}
+                      onChange={(e) =>
+                        setShopForm({
+                          ...shopForm,
+                          description: e.target.value,
+                        })
+                      }
                       placeholder="Describe your shop..."
                       className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       maxLength={1000}
@@ -390,12 +432,21 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                         singleshop.com/
                       </span>
                       <Input
-                        value={profile?.username || ''}
+                        value={profile?.username || ""}
                         disabled
                         className="rounded-l-none"
                       />
-                      <Button type="button" variant="outline" className="rounded-l-none border-l-0" asChild>
-                        <a href={`/${profile?.username}`} target="_blank" rel="noopener noreferrer">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-l-none border-l-0"
+                        asChild
+                      >
+                        <a
+                          href={`/${profile?.username}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <ExternalLink className="h-4 w-4" />
                         </a>
                       </Button>
@@ -405,16 +456,21 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   {/* Social Links */}
                   <div className="space-y-4 pt-4 border-t">
                     <h4 className="font-medium">Social Media Links</h4>
-                    
+
                     <div>
                       <Label htmlFor="website">Website</Label>
                       <Input
                         id="website"
                         value={shopForm.social_links.website}
-                        onChange={(e) => setShopForm({ 
-                          ...shopForm, 
-                          social_links: { ...shopForm.social_links, website: e.target.value }
-                        })}
+                        onChange={(e) =>
+                          setShopForm({
+                            ...shopForm,
+                            social_links: {
+                              ...shopForm.social_links,
+                              website: e.target.value,
+                            },
+                          })
+                        }
                         placeholder="https://yourwebsite.com"
                         type="url"
                       />
@@ -426,10 +482,15 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                         <Input
                           id="instagram"
                           value={shopForm.social_links.instagram}
-                          onChange={(e) => setShopForm({ 
-                            ...shopForm, 
-                            social_links: { ...shopForm.social_links, instagram: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setShopForm({
+                              ...shopForm,
+                              social_links: {
+                                ...shopForm.social_links,
+                                instagram: e.target.value,
+                              },
+                            })
+                          }
                           placeholder="@username"
                         />
                       </div>
@@ -439,10 +500,15 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                         <Input
                           id="twitter"
                           value={shopForm.social_links.twitter}
-                          onChange={(e) => setShopForm({ 
-                            ...shopForm, 
-                            social_links: { ...shopForm.social_links, twitter: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setShopForm({
+                              ...shopForm,
+                              social_links: {
+                                ...shopForm.social_links,
+                                twitter: e.target.value,
+                              },
+                            })
+                          }
                           placeholder="@username"
                         />
                       </div>
@@ -454,10 +520,15 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                         <Input
                           id="facebook"
                           value={shopForm.social_links.facebook}
-                          onChange={(e) => setShopForm({ 
-                            ...shopForm, 
-                            social_links: { ...shopForm.social_links, facebook: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setShopForm({
+                              ...shopForm,
+                              social_links: {
+                                ...shopForm.social_links,
+                                facebook: e.target.value,
+                              },
+                            })
+                          }
                           placeholder="Page name"
                         />
                       </div>
@@ -467,17 +538,24 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                         <Input
                           id="youtube"
                           value={shopForm.social_links.youtube}
-                          onChange={(e) => setShopForm({ 
-                            ...shopForm, 
-                            social_links: { ...shopForm.social_links, youtube: e.target.value }
-                          })}
+                          onChange={(e) =>
+                            setShopForm({
+                              ...shopForm,
+                              social_links: {
+                                ...shopForm.social_links,
+                                youtube: e.target.value,
+                              },
+                            })
+                          }
                           placeholder="Channel name"
                         />
                       </div>
                     </div>
 
                     <p className="text-sm text-muted-foreground">
-                      <Badge variant="secondary" className="mr-2">Coming Soon</Badge>
+                      <Badge variant="secondary" className="mr-2">
+                        Coming Soon
+                      </Badge>
                       Social links will be displayed on your shop page
                     </p>
                   </div>
@@ -502,7 +580,7 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
         )}
 
         {/* Payments Tab */}
-        {activeTab === 'payments' && (
+        {activeTab === "payments" && (
           <div className="max-w-2xl">
             <Card>
               <CardHeader>
@@ -518,23 +596,28 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   </div>
                   <div className="flex items-center space-x-2">
                     {profile?.payment_onboarded ? (
-                      <Badge variant="default" className="bg-green-100 text-green-800">
+                      <Badge
+                        variant="default"
+                        className="bg-green-100 text-green-800"
+                      >
                         <Check className="h-3 w-3 mr-1" />
                         Connected
                       </Badge>
                     ) : (
-                      <Badge variant="secondary">
-                        Not Connected
-                      </Badge>
+                      <Badge variant="secondary">Not Connected</Badge>
                     )}
                   </div>
                 </div>
 
                 {!profile?.payment_onboarded && (
                   <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="font-medium text-blue-900 mb-2">Setup Payment Account</h4>
+                    <h4 className="font-medium text-blue-900 mb-2">
+                      Setup Payment Account
+                    </h4>
                     <p className="text-sm text-blue-800 mb-4">
-                      To start receiving payments, you need to set up your payment account. This is a simulated process for demo purposes.
+                      To start receiving payments, you need to set up your
+                      payment account. This is a simulated process for demo
+                      purposes.
                     </p>
                     <Button onClick={createPaymentAccount} disabled={loading}>
                       {loading ? (
@@ -565,7 +648,7 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
         )}
 
         {/* Notifications Tab */}
-        {activeTab === 'notifications' && (
+        {activeTab === "notifications" && (
           <div className="max-w-2xl">
             <Card>
               <CardHeader>
@@ -576,7 +659,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium">Email Notifications</h4>
-                      <p className="text-sm text-muted-foreground">Receive emails for important updates</p>
+                      <p className="text-sm text-muted-foreground">
+                        Receive emails for important updates
+                      </p>
                     </div>
                     <Badge variant="secondary">Coming Soon</Badge>
                   </div>
@@ -584,7 +669,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium">Order Notifications</h4>
-                      <p className="text-sm text-muted-foreground">Get notified when you receive new orders</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get notified when you receive new orders
+                      </p>
                     </div>
                     <Badge variant="secondary">Coming Soon</Badge>
                   </div>
@@ -592,7 +679,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium">Marketing Emails</h4>
-                      <p className="text-sm text-muted-foreground">Receive tips and updates about SingleShop</p>
+                      <p className="text-sm text-muted-foreground">
+                        Receive tips and updates about SingleShop
+                      </p>
                     </div>
                     <Badge variant="secondary">Coming Soon</Badge>
                   </div>
@@ -603,7 +692,7 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
         )}
 
         {/* Security Tab */}
-        {activeTab === 'security' && (
+        {activeTab === "security" && (
           <div className="max-w-2xl">
             <Card>
               <CardHeader>
@@ -614,7 +703,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium">Change Password</h4>
-                      <p className="text-sm text-muted-foreground">Update your account password</p>
+                      <p className="text-sm text-muted-foreground">
+                        Update your account password
+                      </p>
                     </div>
                     <Badge variant="secondary">Coming Soon</Badge>
                   </div>
@@ -622,7 +713,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium">Two-Factor Authentication</h4>
-                      <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
+                      <p className="text-sm text-muted-foreground">
+                        Add an extra layer of security
+                      </p>
                     </div>
                     <Badge variant="secondary">Coming Soon</Badge>
                   </div>
@@ -630,7 +723,9 @@ export default function SettingsPage({ user, profile, shop }: SettingsPageProps)
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium">Login History</h4>
-                      <p className="text-sm text-muted-foreground">See your recent login activity</p>
+                      <p className="text-sm text-muted-foreground">
+                        See your recent login activity
+                      </p>
                     </div>
                     <Badge variant="secondary">Coming Soon</Badge>
                   </div>

@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-interface Context {
-  params: {
-    orderId: string;
-  };
-}
 
-export async function PATCH(request: NextRequest, context: Context) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ orderId: string }> }) {
   try {
     const supabase = await createClient();
-    const { orderId } = context.params;
+    const { orderId } = await context.params;
     const body = await request.json();
     
     // Get current user

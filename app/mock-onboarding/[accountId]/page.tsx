@@ -7,13 +7,13 @@ import { paymentProvider } from '@/lib/payment-provider';
 import { redirect } from 'next/navigation';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     accountId: string;
-  };
+  }>;
 }
 
 export default async function MockOnboardingPage({ params }: PageProps) {
-  const { accountId } = params;
+  const { accountId } = await params;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-12">

@@ -79,8 +79,8 @@ export async function GET(request: NextRequest) {
       views: 0,
       revenue: 0,
       conversion_rate: 0,
-      recent_events: [],
-      daily_stats: [],
+      recent_events: [] as any[],
+      daily_stats: [] as any[],
     };
 
     if (events) {

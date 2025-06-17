@@ -132,6 +132,7 @@ class StripePaymentProvider extends PaymentProvider {
   private stripe: any; // Would be Stripe instance
 
   constructor(secretKey: string) {
+    super();
     // this.stripe = new Stripe(secretKey);
     throw new Error('Stripe provider not implemented yet. Use MockPaymentProvider for development.');
   }

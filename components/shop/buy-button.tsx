@@ -8,7 +8,10 @@ import CheckoutModal from "@/components/checkout-modal";
 interface Product {
   id: string;
   name: string;
+  description: string;
   price_cents: number;
+  currency: string;
+  image_urls: string[];
   inventory_count: number | null;
   is_available: boolean;
 }

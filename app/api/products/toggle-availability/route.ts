@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user owns the shop
-    if (product.shops.user_id !== user.id) {
+    if ((product.shops as any).user_id !== user.id) {
       return NextResponse.json(
         { error: 'Access denied' },
         { status: 403 }
